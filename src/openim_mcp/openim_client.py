@@ -47,6 +47,7 @@ class OpenIMClient:
                     max_keepalive_connections=settings.http_pool_size,
                     keepalive_expiry=settings.http_pool_keepalive,
                 ),
+                trust_env=False,
             )
         return self._client
 
@@ -172,6 +173,7 @@ class OpenIMClient:
             payload = {
                 "sendID": send_id,
                 "recvID": recv_id,
+                "groupID": recv_id if session_type in (2, 3) else "",
                 "content": {"content": text},
                 "contentType": 101,
                 "sessionType": session_type,
@@ -714,6 +716,7 @@ class OpenIMClient:
             payload = {
                 "sendID": send_id,
                 "recvID": recv_id,
+                "groupID": recv_id if session_type in (2, 3) else "",
                 "content": {
                     "sourcePicture": {"url": image_url},
                     "bigPicture": {"url": image_url},
@@ -759,6 +762,7 @@ class OpenIMClient:
             payload = {
                 "sendID": send_id,
                 "recvID": group_id,
+                "groupID": group_id,
                 "content": {
                     "text": text,
                     "atUserList": at_user_ids,
