@@ -150,8 +150,11 @@ async def revoke_message(
     seq: Annotated[int, Field(description="要撤回消息的 seq 序号")],
 ) -> str:
     """
-    撤回一条已发送的消息。
+    撤回一条已发送的消息。需启用 ALLOW_REVOKE_MESSAGE 环境变量。
     """
+    allowed, err_msg = openim_client.check_revoke_policy()
+    if not allowed:
+        return json.dumps({"success": False, "error": err_msg, "errCode": -1})
     try:
         success, result = await openim_client.revoke_message(
             user_id=user_id,
@@ -310,8 +313,11 @@ async def invite_to_group(
     reason: Annotated[str, Field(description="邀请说明")] = "",
 ) -> str:
     """
-    邀请用户进群。若群设置需要验证，则需群主或管理员同意。
+    邀请用户进群。需启用 ALLOW_INVITE_TO_GROUP 环境变量。若群设置需要验证，则需群主或管理员同意。
     """
+    allowed, err_msg = openim_client.check_invite_policy()
+    if not allowed:
+        return json.dumps({"success": False, "error": err_msg, "errCode": -1})
     try:
         success, result = await openim_client.invite_to_group(
             group_id=group_id,
@@ -334,8 +340,11 @@ async def kick_group_member(
     reason: Annotated[str, Field(description="移除原因")] = "",
 ) -> str:
     """
-    将群成员从群组中移除。若移除群主，需先转让群主身份。
+    将群成员从群组中移除。需启用 ALLOW_KICK_MEMBER 环境变量。若移除群主，需先转让群主身份。
     """
+    allowed, err_msg = openim_client.check_kick_policy()
+    if not allowed:
+        return json.dumps({"success": False, "error": err_msg, "errCode": -1})
     try:
         success, result = await openim_client.kick_group_member(
             group_id=group_id,

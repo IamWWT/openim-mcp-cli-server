@@ -4,6 +4,10 @@
 
 基于 [FastMCP](https://github.com/jlowin/fastmcp) 构建的 **OpenIM 即时通讯 MCP 服务**，为 AI Agent 提供完整的消息发送、用户管理、群组管理和会话查询能力，适用于 AIOps 告警派发、运维协作等场景。
 
+相关资源：
+- [OpenIM REST API 文档](https://docs.openim.io/zh-Hans/restapi/apis/introduction)
+- [OpenIM Docker 部署](https://github.com/openimsdk/openim-docker)
+
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
@@ -38,9 +42,11 @@
 ### 基础设施
 - 🔄 自动缓存并刷新管理员 Token，网络异常自动重试
 - 🚀 httpx 连接池复用 + 信号量并发控制
-- 🔒 默认群聊安全策略（ALLOW_PRIVATE_CHAT 开关）
 - 🛡️ 发送者身份绑定（OPENIM_SENDER_ID，防伪造）
-- 🛡️ 危险操作默认关闭（ALLOW_CREATE_GROUP / ALLOW_SEND_NOTIFICATION 开关）
+- 🔒 全量危险操作环境变量控制（6 个 ALLOW_* 开关，默认全部关闭）：
+  - `ALLOW_PRIVATE_CHAT` — 私聊 | `ALLOW_CREATE_GROUP` — 建群
+  - `ALLOW_SEND_NOTIFICATION` — 通知 | `ALLOW_INVITE_TO_GROUP` — 邀请进群
+  - `ALLOW_KICK_MEMBER` — 移除成员 | `ALLOW_REVOKE_MESSAGE` — 撤回消息
 - 🖥️ CLI 命令行工具（无需启动 MCP 服务即可直接调用）
 
 ---
@@ -58,9 +64,9 @@
 ```bash
 # OpenIM 服务地址
 OPENIM_API_ADDRESS=http://192.168.0.127:10002
-OPENIM_ADMIN_SECRET="Pwd1Open2#IMD"
+OPENIM_ADMIN_SECRET=OpenIM123
 OPENIM_ADMIN_ID=imAdmin
-OPENIM_SENDER_ID=bot001
+OPENIM_SENDER_ID=<your_sender_id>
 
 # MCP 服务配置
 MCP_TRANSPORT=http
@@ -68,10 +74,13 @@ MCP_HOST=0.0.0.0
 MCP_PORT=8079
 LOG_LEVEL=INFO
 
-# 安全策略（默认禁止私聊，如需开启设为 true）
+# 安全策略（高危操作默认全部关闭，按需显式开启）
 ALLOW_PRIVATE_CHAT=false
 ALLOW_CREATE_GROUP=false
 ALLOW_SEND_NOTIFICATION=false
+ALLOW_INVITE_TO_GROUP=false
+ALLOW_KICK_MEMBER=false
+ALLOW_REVOKE_MESSAGE=false
 ```
 
 ### 3. 安装依赖并启动
@@ -99,7 +108,7 @@ uv run openim-cli --help
 uv run openim-mcp
 ```
 
-服务默认监听 `http://0.0.0.0:8079`，提供 13 个 MCP 工具。
+服务默认监听 `http://0.0.0.0:8079`，提供 16 个 MCP 工具，所有危险操作均有独立环境变量开关控制。
 
 ### 方式二：CLI 命令行（直接调用）
 
@@ -177,24 +186,24 @@ uv run openim-cli list-conversations --user-id bot001
 
 ## MCP 工具清单
 
-| 工具名 | 分类 | 说明 |
-|--------|------|------|
-| `send_text_message` | 消息 | 发送文本消息（单聊/群聊） |
-| `send_picture_message` | 消息 | 发送图片消息 |
-| `send_group_at_message` | 消息 | 群聊 @ 消息 |
-| `send_business_notification` | 消息 | 发送业务通知 |
-| `revoke_message` | 消息 | 撤回消息 |
-| `get_users_info` | 用户 | 获取用户详情 |
-| `get_users_online_status` | 用户 | 获取在线状态 |
-| `get_all_users` | 用户 | 获取所有注册用户 |
-| `get_groups_info` | 群组 | 获取群组详情 |
-| `get_group_member_list` | 群组 | 获取群成员列表 |
-| `create_group` | 群组 | 创建群组 |
-| `invite_to_group` | 群组 | 邀请进群 |
-| `kick_group_member` | 群组 | 移除群成员 |
-| `get_conversation_list` | 会话 | 获取会话列表 |
-| `lookup_user` | 查询 | 用户查询：userID→昵称 / 昵称→userID |
-| `lookup_group` | 查询 | 群组查询：groupID→群名称 |
+| 工具名 | 分类 | 安全控制 | 说明 |
+|--------|------|----------|------|
+| `send_text_message` | 消息 | `ALLOW_PRIVATE_CHAT` | 发送文本消息（单聊/群聊） |
+| `send_picture_message` | 消息 | `ALLOW_PRIVATE_CHAT` | 发送图片消息 |
+| `send_group_at_message` | 消息 | — | 群聊 @ 消息 |
+| `send_business_notification` | 消息 | `ALLOW_SEND_NOTIFICATION` | 发送业务通知 |
+| `revoke_message` | 消息 | `ALLOW_REVOKE_MESSAGE` | 撤回消息 |
+| `get_users_info` | 用户 | — | 获取用户详情 |
+| `get_users_online_status` | 用户 | — | 获取在线状态 |
+| `get_all_users` | 用户 | — | 获取所有注册用户（分页） |
+| `get_groups_info` | 群组 | — | 获取群组详情 |
+| `get_group_member_list` | 群组 | — | 获取群成员列表（分页） |
+| `create_group` | 群组 | `ALLOW_CREATE_GROUP` | 创建群组 |
+| `invite_to_group` | 群组 | `ALLOW_INVITE_TO_GROUP` | 邀请进群 |
+| `kick_group_member` | 群组 | `ALLOW_KICK_MEMBER` | 移除群成员 |
+| `get_conversation_list` | 会话 | — | 获取会话列表 |
+| `lookup_user` | 查询 | — | 用户查询：userID→昵称 / 昵称→userID |
+| `lookup_group` | 查询 | — | 群组查询：groupID→群名称 |
 
 ---
 
@@ -206,7 +215,7 @@ src/openim_mcp/
 ├── __main__.py          # python -m 入口
 ├── config.py            # 配置管理（环境变量）
 ├── openim_client.py     # OpenIM REST API 客户端
-├── server.py            # MCP 服务（15 个工具）
+├── server.py            # MCP 服务（16 个工具）
 └── cli.py               # CLI 命令行工具
 ```
 
@@ -227,9 +236,9 @@ uv run ruff check src/
 
 ## 文档
 
-- [部署指南](docs/deploy.md) — 快速部署、生产环境配置、容器化
-- [安全操作梳理](docs/security-operations.md) — 工具风险评估、安全策略配置
-- [CLI 认证排障](docs/troubleshooting-cli-auth-failure.md) — secret invalid 等常见问题
+- [部署指南](docs/DEPLOY.md) — 快速部署、生产环境配置、容器化
+- [安全操作梳理](docs/SECURITY.md) — 工具风险评估、安全策略配置
+- [CLI 认证排障](docs/CLI_TROUBLESHOOTING.md) — secret invalid 等常见问题
 
 ---
 

@@ -1,0 +1,1 @@
+{"success": false, "error": "\u521b\u5efa\u7fa4\u7ec4\u5df2\u7981\u7528\uff08ALLOW_CREATE_GROUP=false\uff09\u3002\u9700\u5728 .env \u4e2d\u8bbe\u4e3a true \u5f00\u542f"}

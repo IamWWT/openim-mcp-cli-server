@@ -27,7 +27,7 @@ cd openim-mcp-cli-server
 ### 2. 配置环境变量
 
 ```bash
-cp .env.templates .env   # 如果有模板文件
+cp .env.template .env
 # 或直接编辑 .env
 vim .env
 ```
@@ -37,9 +37,9 @@ vim .env
 ```bash
 # OpenIM 服务地址
 OPENIM_API_ADDRESS=http://192.168.0.127:10002
-OPENIM_ADMIN_SECRET="your-secret-here"
+OPENIM_ADMIN_SECRET=OpenIM123
 OPENIM_ADMIN_ID=imAdmin
-OPENIM_SENDER_ID=bot001
+OPENIM_SENDER_ID=<your_sender_id>
 
 # MCP 服务
 MCP_TRANSPORT=http
@@ -55,7 +55,7 @@ ALLOW_CREATE_GROUP=false      # 建群
 ALLOW_SEND_NOTIFICATION=false # 业务通知
 ```
 
-详细配置说明见 [安全操作文档](docs/security-operations.md)。
+详细配置说明见 [安全操作梳理](docs/SECURITY.md)。
 
 ### 3. 安装依赖
 
@@ -70,7 +70,7 @@ uv sync
 uv run openim-cli --help
 
 # 运行验证脚本（离线模式）
-bash test/verify_tools.sh
+bash docs/test_validation.sh
 ```
 
 ---
@@ -87,7 +87,7 @@ uv run openim-mcp
 ./start.sh start
 ```
 
-服务默认监听 `http://0.0.0.0:8079/mcp`，提供 15 个 MCP 工具。
+服务默认监听 `http://0.0.0.0:8079/mcp`，提供 16 个 MCP 工具，所有危险操作均有独立环境变量开关控制。
 
 验证服务：
 
@@ -231,10 +231,10 @@ services:
 
 ```bash
 # 离线验证（检查代码和 CLI 接口）
-bash test/verify_tools.sh
+bash docs/test_validation.sh
 
 # 在线验证（需要 OpenIM 服务可达）
-bash test/verify_tools.sh --online
+bash docs/test_validation.sh --online
 ```
 
 验证覆盖：
@@ -252,7 +252,7 @@ bash test/verify_tools.sh --online
 **.env 中 `OPENIM_ADMIN_SECRET` 与 OpenIM 服务端配置不一致。**
 从 OpenIM Docker 部署的 `.env` 中获取实际 secret 值。
 
-详见：[CLI 认证排障文档](docs/troubleshooting-cli-auth-failure.md)
+详见：[CLI 认证排障文档](docs/CLI_TROUBLESHOOTING.md)
 
 ### Q: 私聊被拦截
 **默认禁止私聊，`ALLOW_PRIVATE_CHAT=false`。**

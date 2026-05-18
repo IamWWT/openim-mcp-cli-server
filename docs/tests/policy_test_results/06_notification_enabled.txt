@@ -1,0 +1,2 @@
+2026-05-18 16:54:58.314 | INFO     | openim_mcp.openim_client:_refresh_token:174 - OpenIM admin token refreshed, TTL=7776000s
+{"success": true, "detail": {"serverMsgID": "5033627f1bcd395c8d0d7301e648bf1a", "clientMsgID": "aa32e5cf3fb141f5c9c853acacfb43b5", "sendTime": 1779094498315, "modify": null}}

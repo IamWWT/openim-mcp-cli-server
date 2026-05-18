@@ -8,9 +8,8 @@ curl --noproxy "*" -X POST http://localhost:8079/mcp \
     "params": {
       "name": "send_text_message",
       "arguments": {
-        "recv_id": "7428567941",
+        "recv_id": "6122258426",
         "text": "Hello from wwt-aiops, this is a test message.",
-        "sender_id": "8625478123",
         "session_type": 1
       }
     }

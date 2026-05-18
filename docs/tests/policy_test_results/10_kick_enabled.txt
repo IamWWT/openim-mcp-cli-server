@@ -1,0 +1,3 @@
+2026-05-18 16:55:00.407 | INFO     | openim_mcp.openim_client:_refresh_token:174 - OpenIM admin token refreshed, TTL=7776000s
+2026-05-18 16:55:00.409 | WARNING  | openim_mcp.openim_client:kick_group_member:672 - Kick group member error: errCode=1101
+{"success": false, "detail": null}

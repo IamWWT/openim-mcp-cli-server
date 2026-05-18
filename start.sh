@@ -15,6 +15,11 @@ print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 print_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 print_step() { echo -e "${BLUE}[STEP]${NC} $1"; }
 
+# 清除系统代理变量（避免干扰 httpx 请求）
+clear_proxy() {
+    unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy ALL_PROXY all_proxy 2>/dev/null || true
+}
+
 # 加载 .env 文件
 load_env() {
     if [ -f ".env" ]; then
@@ -36,7 +41,7 @@ get_config() {
     
     # OpenIM 配置
     OPENIM_API_ADDRESS="${OPENIM_API_ADDRESS:-http://localhost:10002}"
-    OPENIM_ADMIN_SECRET="${OPENIM_ADMIN_SECRET:-openIM123}"
+    OPENIM_ADMIN_SECRET="${OPENIM_ADMIN_SECRET:-OpenIM123}"
     OPENIM_SENDER_ID="${OPENIM_SENDER_ID:-openIMAdmin}"
     OPENIM_PLATFORM_ID="${OPENIM_PLATFORM_ID:-5}"
     
@@ -135,6 +140,9 @@ start_service() {
     # 创建日志目录
     mkdir -p "$LOG_DIR"
     
+    # 清除代理
+    clear_proxy
+
     # 加载配置
     load_env
     get_config
@@ -314,7 +322,7 @@ Environment (.env file):
     MCP_HOST                    HTTP 绑定地址 (默认: 0.0.0.0)
     MCP_PORT                    HTTP 绑定端口 (默认: 8084)
     OPENIM_API_ADDRESS          OpenIM API 地址 (默认: http://localhost:10002)
-    OPENIM_ADMIN_SECRET         管理员密钥 (默认: openIM123)
+    OPENIM_ADMIN_SECRET         管理员密钥 (默认: OpenIM123)
     OPENIM_SENDER_ID            发送者 ID (默认: openIMAdmin)
     OPENIM_PLATFORM_ID          平台 ID (默认: 5)
 

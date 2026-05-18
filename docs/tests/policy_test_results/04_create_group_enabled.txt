@@ -1,0 +1,2 @@
+2026-05-18 16:54:57.273 | INFO     | openim_mcp.openim_client:_refresh_token:174 - OpenIM admin token refreshed, TTL=7776000s
+{"success": true, "data": {"groupID": "683310628", "groupName": "policy-test-1779094496", "notification": "", "introduction": "", "faceURL": "", "ownerUserID": "5351970893", "createTime": 1779094497274, "memberCount": 3, "ex": "", "status": 0, "creatorUserID": "", "groupType": 2, "needVerification": 0, "lookMemberInfo": 0, "applyMemberFriend": 0, "notificationUpdateTime": 0, "notificationUserID": ""}}

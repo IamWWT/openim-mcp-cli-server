@@ -11,10 +11,9 @@ async def main():
             result = await session.call_tool(
                 "send_text_message",
                 arguments={
-                    "recv_id": "7428567941",
+                    "recv_id": "6122258426",
                     "text": "Hello from wwt-aiops, test message.",
-                    "session_type": 1,
-                    "sender_id": "8625478123"
+                    "session_type": 1
                 }
             )
             print(result)

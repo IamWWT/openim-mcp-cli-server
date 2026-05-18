@@ -25,7 +25,7 @@
 | `send_picture_message` | 🟡 中危 | 同上，且可发送恶意图片 | 同 `send_text_message` 控制链 |
 | `send_group_at_message` | 🟡 中危 | 在群内 @ 骚扰用户 | **sender_id 由环境变量指定**；仅在群聊内生效，需 groupID |
 | `send_business_notification` | 🔴 高危 | 推送虚假告警，干扰业务 | **默认关闭**（`ALLOW_SEND_NOTIFICATION=false`），需显式开启 |
-| `revoke_message` | 🟡 中危 | 撤回他人正常消息 | 需要消息的 `conversationID` + `seq`，无法批量操作；OpenIM 服务端限制撤回时间窗 |
+| `revoke_message` | 🟡 中危 | 撤回他人正常消息 | **默认关闭**（`ALLOW_REVOKE_MESSAGE=false`），需显式开启；需要消息的 `conversationID` + `seq`，无法批量操作 |
 
 ### 用户管理 (User)
 
@@ -42,8 +42,8 @@
 | `get_groups_info` | 🟢 低危 | 查询群信息 | 只读操作 |
 | `get_group_member_list` | 🟢 低危 | 查看群成员 | 只读操作 |
 | `create_group` | 🔴 高危 | 批量创建垃圾群组 | **默认关闭**（`ALLOW_CREATE_GROUP=false`），需显式开启 |
-| `invite_to_group` | 🔴 高危 | 将用户拉入恶意群组 | **无独立开关**，需群ID（需先已知群），被邀方可拒绝 |
-| `kick_group_member` | 🔴 高危 | 恶意移除群成员（含群主） | **无独立开关**，需群ID + 被移除者userID；移除群主需先转让 |
+| `invite_to_group` | 🔴 高危 | 将用户拉入恶意群组 | **默认关闭**（`ALLOW_INVITE_TO_GROUP=false`），需显式开启 |
+| `kick_group_member` | 🔴 高危 | 恶意移除群成员（含群主） | **默认关闭**（`ALLOW_KICK_MEMBER=false`），需显式开启 |
 
 ### 会话管理 (Conversation)
 
@@ -68,9 +68,12 @@ Layer 1: 身份绑定
       防止调用方冒充他人身份发送消息
 
 Layer 2: 功能开关
-   └─ ALLOW_PRIVATE_CHAT=false    → 禁止单聊
-   └─ ALLOW_CREATE_GROUP=false    → 禁止建群
-   └─ ALLOW_SEND_NOTIFICATION=false → 禁止推送通知
+   └─ ALLOW_PRIVATE_CHAT=false       → 禁止单聊
+   └─ ALLOW_CREATE_GROUP=false       → 禁止建群
+   └─ ALLOW_SEND_NOTIFICATION=false  → 禁止推送通知
+   └─ ALLOW_INVITE_TO_GROUP=false    → 禁止邀请进群
+   └─ ALLOW_KICK_MEMBER=false        → 禁止移除群成员
+   └─ ALLOW_REVOKE_MESSAGE=false     → 禁止撤回消息
       高危操作默认关闭，需管理员显式开启
 
 Layer 3: 参数校验
@@ -79,37 +82,21 @@ Layer 3: 参数校验
    └─ kick 需要群ID + userID（无法批量操作）
 ```
 
----
-
-## 当前未覆盖的高危操作
-
-以下操作**目前没有独立的环境变量开关**，存在滥用风险：
-
-| 操作 | 风险 | 建议 |
-|------|------|------|
-| `invite_to_group` | 🔴 将用户拉入恶意群组 | 建议添加 `ALLOW_INVITE_TO_GROUP` 开关（默认关闭） |
-| `kick_group_member` | 🔴 恶意移除群成员 | 建议添加 `ALLOW_KICK_MEMBER` 开关（默认关闭） |
-| `revoke_message` | 🟡 撤回他人消息 | 建议添加 `ALLOW_REVOKE_MESSAGE` 开关（默认关闭） |
-
----
-
 ## 环境变量安全配置清单
 
 ```bash
 # .env — 安全策略配置（生产环境推荐值）
 
 # 身份绑定（必填）
-OPENIM_SENDER_ID=bot001              # 发送消息的固定身份，MCP 工具不可覆盖
+OPENIM_SENDER_ID=<your_sender_id>    # 发送消息的固定身份，MCP 工具不可覆盖
 
-# 操作开关（高危操作默认 false）
+# 操作开关（高危操作默认全部关闭）
 ALLOW_PRIVATE_CHAT=false             # 私聊
 ALLOW_CREATE_GROUP=false             # 建群
 ALLOW_SEND_NOTIFICATION=false        # 业务通知
-
-# 建议新增（尚未实现）
-# ALLOW_INVITE_TO_GROUP=false        # 邀请进群
-# ALLOW_KICK_MEMBER=false            # 移除群成员
-# ALLOW_REVOKE_MESSAGE=false         # 撤回消息
+ALLOW_INVITE_TO_GROUP=false          # 邀请进群
+ALLOW_KICK_MEMBER=false              # 移除群成员
+ALLOW_REVOKE_MESSAGE=false           # 撤回消息
 ```
 
 ---

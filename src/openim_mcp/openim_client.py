@@ -83,6 +83,27 @@ class OpenIMClient:
             return False, "发送业务通知已禁用（ALLOW_SEND_NOTIFICATION=false）。需在 .env 中设为 true 开启"
         return True, ""
 
+    @staticmethod
+    def check_invite_policy() -> tuple[bool, str]:
+        """校验是否允许邀请进群"""
+        if not settings.allow_invite_to_group:
+            return False, "邀请进群已禁用（ALLOW_INVITE_TO_GROUP=false）。需在 .env 中设为 true 开启"
+        return True, ""
+
+    @staticmethod
+    def check_kick_policy() -> tuple[bool, str]:
+        """校验是否允许移除群成员"""
+        if not settings.allow_kick_member:
+            return False, "移除群成员已禁用（ALLOW_KICK_MEMBER=false）。需在 .env 中设为 true 开启"
+        return True, ""
+
+    @staticmethod
+    def check_revoke_policy() -> tuple[bool, str]:
+        """校验是否允许撤回消息"""
+        if not settings.allow_revoke_message:
+            return False, "撤回消息已禁用（ALLOW_REVOKE_MESSAGE=false）。需在 .env 中设为 true 开启"
+        return True, ""
+
     async def lookup_user(
         self,
         user_id: str = "",

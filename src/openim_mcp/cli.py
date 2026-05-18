@@ -71,6 +71,11 @@ async def _run_cmd(cmd_name: str, kwargs: dict) -> None:
             print(json.dumps({"success": ok, "detail": data}, ensure_ascii=False))
 
         elif cmd_name == "revoke-message":
+            allowed, err = client.check_revoke_policy()
+            if not allowed:
+                print(json.dumps({"success": False, "error": err}))
+                await client.close()
+                sys.exit(1)
             ok, data = await client.revoke_message(**kwargs)
             print(json.dumps({"success": ok, "detail": data}, ensure_ascii=False))
 
@@ -105,10 +110,20 @@ async def _run_cmd(cmd_name: str, kwargs: dict) -> None:
             print(json.dumps({"success": ok, "data": data}, ensure_ascii=False))
 
         elif cmd_name == "invite-to-group":
+            allowed, err = client.check_invite_policy()
+            if not allowed:
+                print(json.dumps({"success": False, "error": err}))
+                await client.close()
+                sys.exit(1)
             ok, data = await client.invite_to_group(**kwargs)
             print(json.dumps({"success": ok, "detail": data}, ensure_ascii=False))
 
         elif cmd_name == "kick-from-group":
+            allowed, err = client.check_kick_policy()
+            if not allowed:
+                print(json.dumps({"success": False, "error": err}))
+                await client.close()
+                sys.exit(1)
             ok, data = await client.kick_group_member(**kwargs)
             print(json.dumps({"success": ok, "detail": data}, ensure_ascii=False))
 

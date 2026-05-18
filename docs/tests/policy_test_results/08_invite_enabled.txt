@@ -1,0 +1,3 @@
+2026-05-18 16:54:59.370 | INFO     | openim_mcp.openim_client:_refresh_token:174 - OpenIM admin token refreshed, TTL=7776000s
+2026-05-18 16:54:59.373 | WARNING  | openim_mcp.openim_client:invite_to_group:631 - Invite to group error: errCode=1004
+{"success": false, "detail": null}

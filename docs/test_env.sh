@@ -22,8 +22,8 @@ load_dotenv()  # 加载 .env 文件
 
 # ---------- 配置 ----------
 API_ADDRESS = os.getenv("OPENIM_API_ADDRESS", "http://localhost:10002")
-ADMIN_SECRET = os.getenv("OPENIM_ADMIN_SECRET", "openIM123")
-SENDER_ID = os.getenv("OPENIM_SENDER_ID", "openIMAdmin")
+ADMIN_SECRET = os.getenv("OPENIM_ADMIN_SECRET", "OpenIM123")
+SENDER_ID = os.getenv("OPENIM_SENDER_ID", "5351970893")
 PLATFORM_ID = int(os.getenv("OPENIM_PLATFORM_ID", "5"))
 REQUEST_TIMEOUT = int(os.getenv("OPENIM_REQUEST_TIMEOUT", "30"))
 MAX_RETRIES = int(os.getenv("OPENIM_MAX_RETRIES", "3"))

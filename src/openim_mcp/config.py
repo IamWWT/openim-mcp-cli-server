@@ -21,7 +21,7 @@ class Settings(BaseSettings):
         description="OpenIM API 地址，例如 http://192.168.0.127:10002"
     )
     openim_admin_secret: str = Field(
-        default="Pwd1Open2#IMD",
+        default="OpenIM123",
         description="OpenIM 管理员密钥（与 config.yaml 中的 secret 一致）"
     )
     openim_admin_id: str = Field(
@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     # 发送者身份 — 由环境变量统一指定，防止调用方伪造身份
     sender_id: str = Field(
         default="",
+        alias="OPENIM_SENDER_ID",
         description="发送消息时使用的 senderID（由环境变量 OPENIM_SENDER_ID 指定，MCP 工具不可覆盖）"
     )
     # 平台 ID（5=普通用户端，12=机器人，按实际填写）
@@ -50,6 +51,18 @@ class Settings(BaseSettings):
     allow_send_notification: bool = Field(
         default=False,
         description="是否允许发送业务通知。默认 false，需显式开启"
+    )
+    allow_invite_to_group: bool = Field(
+        default=False,
+        description="是否允许邀请用户进群。默认 false，需显式开启"
+    )
+    allow_kick_member: bool = Field(
+        default=False,
+        description="是否允许移除群成员。默认 false，需显式开启"
+    )
+    allow_revoke_message: bool = Field(
+        default=False,
+        description="是否允许撤回消息。默认 false，需显式开启"
     )
 
     # Token 缓存

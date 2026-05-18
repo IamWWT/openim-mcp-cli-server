@@ -1,0 +1,3 @@
+2026-05-18 16:55:01.997 | INFO     | openim_mcp.openim_client:_refresh_token:174 - OpenIM admin token refreshed, TTL=7776000s
+2026-05-18 16:55:01.999 | WARNING  | openim_mcp.openim_client:revoke_message:329 - Revoke message error: errCode=1001
+{"success": false, "detail": null}

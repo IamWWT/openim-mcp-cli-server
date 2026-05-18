@@ -1,0 +1,1 @@
+{"success": false, "error": "\u79c1\u804a\u5df2\u7981\u7528\uff08ALLOW_PRIVATE_CHAT=false\uff09\u3002\u8bf7\u4f7f\u7528\u7fa4\u804a\uff08session_type=3\uff09"}

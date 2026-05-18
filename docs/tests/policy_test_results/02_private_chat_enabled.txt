@@ -1,0 +1,3 @@
+2026-05-18 16:54:55.609 | INFO     | openim_mcp.openim_client:_refresh_token:174 - OpenIM admin token refreshed, TTL=7776000s
+2026-05-18 16:54:55.612 | DEBUG    | openim_mcp.openim_client:send_text:227 - Message sent: 5351970893 -> 6122258426, msgID=91163d219caa81003e84c4fb3ae4b6c0
+{"success": true, "server_msg_id": "91163d219caa81003e84c4fb3ae4b6c0"}

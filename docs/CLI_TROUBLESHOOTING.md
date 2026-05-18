@@ -19,7 +19,7 @@
 openim-cli
   └─ OpenIMClient.ensure_token()
        └─ POST /auth/get_admin_token
-            payload: {"secret": "openIM123", "userID": "imAdmin"}
+            payload: {"secret": "wrong_secret", "userID": "imAdmin"}
                                                ↓
                               OpenIM 服务端校验 secret → ❌ 不匹配
                                                ↓
@@ -32,12 +32,12 @@ openim-cli
 
 2. **secret 不匹配**。项目 `.env` 中：
    ```
-   OPENIM_ADMIN_SECRET=openIM123
+   OPENIM_ADMIN_SECRET=wrong_secret
    ```
 
 3. **实际 secret**。OpenIM Docker 部署配置位于 `/home/wwt/repo/jk/my/im/openim-docker-v0408/.env`，其中：
    ```
-   OPENIM_SECRET=Pwd1Open2#IMD
+   OPENIM_SECRET=OpenIM123
    ```
 
 **结论**：`.env` 中的 `OPENIM_ADMIN_SECRET` 值与 OpenIM 服务端实际配置不一致。
@@ -47,25 +47,23 @@ openim-cli
 ### 1. 更新 `.env`
 
 ```diff
--OPENIM_ADMIN_SECRET=openIM123
-+OPENIM_ADMIN_SECRET="Pwd1Open2#IMD"
+-OPENIM_ADMIN_SECRET=wrong_secret
++OPENIM_ADMIN_SECRET=OpenIM123
 ```
-
-> **关键**：`Pwd1Open2#IMD` 包含 `#` 字符，在 `.env` 文件中必须用双引号包裹，否则会被 python-dotenv / bash 当作注释符截断。
 
 ### 2. 同步更新 `config.py` 默认值
 
 ```diff
      openim_admin_secret: str = Field(
--        default="openIM123",
-+        default="Pwd1Open2#IMD",
+-        default="wrong_secret",
++        default="OpenIM123",
 ```
 
 ### 3. 同步更新 `README.md` 示例
 
 ```diff
--OPENIM_ADMIN_SECRET=openIM123
-+OPENIM_ADMIN_SECRET="Pwd1Open2#IMD"
+-OPENIM_ADMIN_SECRET=wrong_secret
++OPENIM_ADMIN_SECRET=OpenIM123
 ```
 
 ### 4. 修复 `pyproject.toml` deprecation warning（附带）
@@ -85,7 +83,7 @@ openim-cli
 from dotenv import dotenv_values
 values = dotenv_values('.env')
 secret = values.get('OPENIM_ADMIN_SECRET')
-# → 'Pwd1Open2#IMD' ✅ (双引号被正确处理，值为完整字符串)
+# → 'OpenIM123' ✅
 ```
 
 ## 涉及的配置文件对应关系
