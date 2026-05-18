@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "openim-mcp-cli-server"
+version = "1.0.0"
+description = "OpenIM MCP Server + CLI — instant messaging tools for AI Agents"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+    { name = "AIOps Team", email = "aiops@example.com" }
+]
+dependencies = [
+    "fastmcp>=3.2.4",
+    "httpx>=0.27.0",
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.8.0",
+    "pydantic-settings>=2.4.0",
+    "loguru>=0.7.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "ruff>=0.6.0",
+]
+
+[project.scripts]
+openim-mcp = "openim_mcp.server:main"
+openim-cli = "openim_mcp.cli:main"
+
+[dependency-groups]
+dev = []
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/openim_mcp"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"

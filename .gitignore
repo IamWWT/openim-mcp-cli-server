@@ -1,0 +1,16 @@
+.venv
+.bak
+.lock
+.vscode/
+.deepseek/
+.deepseek.resume
+*.pid
+.env
+logs
+# build artifacts
+*.pyc
+__pycache__/
+*.egg-info/
+dist/
+build/
+*.bak
